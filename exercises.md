@@ -220,6 +220,30 @@ order by
 
 * Who made the most PRs (pull requests) to this project?
 * What is this user's PR acceptence rate (ratio of PRs merged vs PRs unmerged)?
+
+```sql
+select
+  name,
+  approved_count::real / total_pr_count as approved_rating
+from
+(
+select
+  users.name,
+  sum(case when accepted then 1 else 0 end) as approved_count,
+  count(*) as total_pr_count
+from
+  users
+inner join
+  pull_requests on user.id = pull_requests.user_id
+group by
+  users.id
+) as user_pr_counts;
+
+
+```
+
+
+
 * What tech does this project use?
 * What tech does this user know - based on the tech used in his projects?
 * Who are the top 3 contributors to this project based on number of commits?
